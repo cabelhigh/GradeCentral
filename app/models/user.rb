@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_many :grades
+  has_many :comments
   rolify
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

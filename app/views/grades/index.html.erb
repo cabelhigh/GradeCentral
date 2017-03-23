@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Grades</h1>
+<h1><%= "Your " if current_user.has_role? :student %> Grades</h1>
 
 <table>
   <thead>
@@ -14,14 +14,17 @@
   </thead>
 
   <tbody>
+
+
     <% @grades.each do |grade| %>
       <% if @ability.can? :read, grade, user_id: current_user.id %>
         <tr>
           <td><%= grade.letter_grade %></td>
           <td><%= grade.comment %></td>
           <td><%= grade.course %></td>
-          <td><%= grade.user %></td>
+          <td><%= grade.user.email %></td>
           <td><%= link_to 'Show', grade %></td>
+          <td><%= link_to 'Comment', new_comment_path(:grade => grade.id, :user => current_user.id) %></td>
           <% if @ability.can? :manage, Grade %>
             <td><%= link_to 'Edit', edit_grade_path(grade) %></td>
             <td><%= link_to 'Destroy', grade, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -31,7 +34,8 @@
     <% end %>
   </tbody>
 </table>
+<!-- <%= "<h3>Do your homework, kid, and maybe you'll see some grades here!</h3>".html_safe if @grades.any? {|g| g.user_id != current_user.id} %> -->
 
 <br>
 
-<%= link_to 'New Grade', new_grade_path %>
+<%= link_to 'New Grade', new_grade_path if !current_user.has_role? :student  %>
